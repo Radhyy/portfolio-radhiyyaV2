@@ -2,8 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, ArrowRight, Zap, Sparkles, Plus, Cloud, Mail, FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, FileText, Zap, Sparkles, Plus, X, Mail, Briefcase, GraduationCap, Calendar, MapPin, ChevronDown } from 'lucide-react';
 import ScrollRevealText from "../components/ScrollRevealText";
+import SkeletonGrid from "@/components/SkeletonGrid";
+import ProjectCard from "@/components/ProjectCard";
+import CommentSidebar from "@/components/CommentSidebar";
+import Footer from "@/components/Footer";
+import LocalTime from "@/components/LocalTime";
+import CTASection from "@/components/CTASection";
+import PixelReveal from "@/components/PixelReveal";
+import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 
 interface Project {
   id: number;
@@ -12,6 +21,9 @@ interface Project {
   detailImage?: string;
   tags: string[];
   description: string;
+  collaborators?: any[];
+  commentCount?: number;
+  reactions?: Record<string, number>;
 }
 
 interface Certificate {
@@ -21,255 +33,51 @@ interface Certificate {
   type: "image" | "pdf";
 }
 
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "Worksim AI Platform",
-    image: "/Project/Worksim.png",
-    tags: ["Next.js", "AI", "SaaS"],
-    description: "Worksim is an AI-powered career simulation platform that helps users find their ideal career path through interactive scenarios and skill assessments."
-  },
-  {
-    id: 2,
-    title: "Lehan Farma App",
-    image: "/Project/LehanFarmaNew.png",
-    tags: ["E-Commerce", "React"],
-    description: "A comprehensive pharmacy e-commerce platform and product catalog system with dynamic routing and WhatsApp checkout integration."
-  },
-  {
-    id: 3,
-    title: "Elevra Agency",
-    image: "/Project/LandingPageElevra.png",
-    tags: ["Web Design", "Tailwind"],
-    description: "A modern, premium landing page for Elevra Agency featuring scroll-triggered animations, fluid typography, and a glassmorphism floating navbar."
-  },
-  {
-    id: 4,
-    title: "Picka Photobooth",
-    image: "/Project/LandinPagePickaPhotobooth.png",
-    tags: ["Landing Page", "Next.js"],
-    description: "An elegant promotional landing page for a photobooth rental service, heavily focused on mobile responsiveness and visual aesthetics."
-  },
-  {
-    id: 5,
-    title: "Jatim Innovator",
-    image: "/Project/JatimInnovatorWebsite.png",
-    tags: ["Portal", "CMS"],
-    description: "A regional innovation portal designed to showcase local talents and manage innovation submissions securely with a custom CMS."
-  },
-  {
-    id: 6,
-    title: "Z-Learn LMS",
-    image: "/Project/Z-Learn.png",
-    tags: ["LMS", "Fullstack"],
-    description: "A complete Learning Management System featuring course enrollments, video tracking, and interactive quizzes for students and instructors."
-  },
-  {
-    id: 7,
-    title: "86 Photo Studio",
-    image: "/Project/86PhotoStudioWebsite.png",
-    tags: ["Landing Page", "Photography"],
-    description: "A visually engaging website for a professional photo studio to showcase their portfolio and book clients."
-  },
-  {
-    id: 8,
-    title: "Assignment AI",
-    image: "/Project/AsigmentManagementAi.png",
-    tags: ["SaaS", "AI"],
-    description: "An AI-driven platform for managing assignments, helping students and educators streamline their workflows."
-  },
-  {
-    id: 9,
-    title: "Desa Sawotratap",
-    image: "/Project/DesaSawotratap.png",
-    tags: ["Gov", "Information"],
-    description: "A modern digital portal for Desa Sawotratap, providing transparent information and digital services to citizens."
-  },
-  {
-    id: 10,
-    title: "Desa Watu Pari",
-    image: "/Project/DesaWatuPariWebsite.png",
-    tags: ["Gov", "Portal"],
-    description: "An interactive village website promoting local tourism and managing administrative services."
-  },
-  {
-    id: 11,
-    title: "Facility Helpdesk",
-    image: "/Project/FacilityHeldeskAdmin.png",
-    tags: ["Admin Dashboard", "Management"],
-    description: "An internal helpdesk administration dashboard for facility management and ticketing."
-  },
-  {
-    id: 12,
-    title: "Jeep Tour Company",
-    image: "/Project/JeepTourCompanyProfile.png",
-    tags: ["Company Profile", "Tourism"],
-    description: "A thrilling company profile website for a Jeep tour adventure business."
-  },
-  {
-    id: 13,
-    title: "LHI Fun Run",
-    image: "/Project/LhiFunRunWebsite.png",
-    tags: ["Event", "Ticketing"],
-    description: "A promotional and registration website for the LHI Fun Run marathon event."
-  },
-  {
-    id: 14,
-    title: "NDJ Jok Mobil",
-    image: "/Project/NdjJokMobilCompanyProfile.png",
-    tags: ["Business", "Automotive"],
-    description: "A premium digital presence for an automotive interior and seat modification company."
-  },
-  {
-    id: 15,
-    title: "Iman Portfolio",
-    image: "/Project/PorfolioIman.png",
-    tags: ["Portfolio", "Creative"],
-    description: "A personalized creative portfolio website designed for an independent professional."
-  },
-  {
-    id: 16,
-    title: "Posyandu Bayi",
-    image: "/Project/PosyanduBayiWebsite.png",
-    tags: ["Health", "Information"],
-    description: "An informational web app for monitoring toddler health and posyandu scheduling."
-  },
-  {
-    id: 17,
-    title: "Telkom Wave",
-    image: "/Project/TelkomWaveWebsite.png",
-    tags: ["Corporate", "Tech"],
-    description: "A corporate digital platform showcasing connectivity solutions and tech innovations."
-  }
-];
-
-const cloudProjects: Project[] = [
-  {
-    id: 101,
-    title: "Deployment Laravel + Redis dengan Docker",
-    image: "/ProjectCloud/Deployment Laravel + Redis Menggunakan Docker/Deployment Laravel + Redis Menggunakan Docker.png",
-    detailImage: "/ProjectCloud/Deployment Laravel + Redis Menggunakan Docker/Deployment Laravel + Redis Menggunakan Docker2.png",
-    tags: ["Docker", "Laravel", "Redis", "Cloud"],
-    description: "Proyek deployment aplikasi Laravel dengan Redis sebagai cache layer menggunakan containerisasi Docker. Meliputi konfigurasi docker-compose, jaringan antar container, serta optimasi performa aplikasi berbasis cloud."
-  },
-  {
-    id: 102,
-    title: "Manajemen Branch & Merge Conflict dengan Git",
-    image: "/ProjectCloud/Manajemen Branch dan Penyelesaian Merge Conflict Menggunakan Git dan Lazygit/Manajemen Branch dan Penyelesaian Merge Conflict Menggunakan Git dan Lazygit.png",
-    detailImage: "/ProjectCloud/Manajemen Branch dan Penyelesaian Merge Conflict Menggunakan Git dan Lazygit/Manajemen Branch dan Penyelesaian Merge Conflict Menggunakan Git dan Lazygit2.png",
-    tags: ["Git", "Lazygit", "DevOps", "Version Control"],
-    description: "Praktik manajemen branch dan penyelesaian merge conflict menggunakan Git dan Lazygit. Mencakup strategi branching, resolusi konflik, dan alur kerja kolaborasi tim yang efisien."
-  },
-  {
-    id: 103,
-    title: "Website Profil Statis + Multi-Stage Docker + CI/CD",
-    image: "/ProjectCloud/Website profil Statis sederhana + Multi-Stage Docker + GitHub Actions/Website profil Statis sederhana + Multi-Stage Docker + GitHub Actions1.png",
-    detailImage: "/ProjectCloud/Website profil Statis sederhana + Multi-Stage Docker + GitHub Actions/Website profil Statis sederhana + Multi-Stage Docker + GitHub Actions2.png",
-    tags: ["Docker", "GitHub Actions", "CI/CD", "Static Site"],
-    description: "Membangun dan mendeploy website profil statis menggunakan Multi-Stage Docker build untuk mengoptimalkan ukuran image, serta GitHub Actions untuk pipeline CI/CD otomatis dari push ke deployment."
-  },
-  {
-    id: 104,
-    title: "Deploying Website with Load Balancer + NFS",
-    image: "/ProjectCloud/Deploying Website Use Load balancer + NFS/Deploying Website Use Load balancer + NFS1.png",
-    detailImage: "/ProjectCloud/Deploying Website Use Load balancer + NFS/Deploying Website Use Load balancer + NFS2.png",
-    tags: ["Load Balancer", "NFS", "Nginx", "Linux"],
-    description: "Implementasi deployment website menggunakan load balancer untuk distribusi traffic antar server, dikombinasikan dengan NFS (Network File System) untuk berbagi resource file secara terpusat antar node."
-  },
-  {
-    id: 105,
-    title: "Konfigurasi Web Server Menggunakan NGINX",
-    image: "/ProjectCloud/Konfiguration Webserver Using NGINX/Konfiguration Webserver Using NGINX1.png",
-    detailImage: "/ProjectCloud/Konfiguration Webserver Using NGINX/Konfiguration Webserver Using NGINX2.png",
-    tags: ["NGINX", "Web Server", "Linux", "Cloud"],
-    description: "Konfigurasi dan optimasi web server menggunakan NGINX sebagai reverse proxy dan static file server. Mencakup pengaturan virtual host, SSL termination, dan tuning performa untuk lingkungan produksi."
-  },
-  {
-    id: 106,
-    title: "Setup Home Lab STB Indihome ke Linux Server",
-    image: "/ProjectCloud/Setup Home Lab Stb Indihome To Use Linux Server/Setup Home Lab Stb Indihome To Use Linux Server1.png",
-    detailImage: "/ProjectCloud/Setup Home Lab Stb Indihome To Use Linux Server/Setup Home Lab Stb Indihome To Use Linux Server2.png",
-    tags: ["Linux", "Home Lab", "Server", "Debian"],
-    description: "Mengubah STB (Set-Top Box) Indihome menjadi Linux server fungsional untuk keperluan home lab. Meliputi instalasi sistem operasi Linux, konfigurasi jaringan, dan setup layanan server dasar."
-  },
-  {
-    id: 107,
-    title: "Deployment Laravel + MySQL & Cloudflare Tunnel",
-    image: "/ProjectCloud/Deployment Laravel + Mysql And Configuration Cloudflare Tunnel/Deployment Laravel + Mysql And Configuration Cloudflare Tunnel1.png",
-    detailImage: "/ProjectCloud/Deployment Laravel + Mysql And Configuration Cloudflare Tunnel/Deployment Laravel + Mysql And Configuration Cloudflare Tunnel2.png",
-    tags: ["Laravel", "MySQL", "Cloudflare", "Linux"],
-    description: "Deployment aplikasi Laravel dengan MySQL sebagai database, dikonfigurasi dengan Cloudflare Tunnel untuk akses publik yang aman tanpa membuka port langsung ke internet."
-  },
-  {
-    id: 108,
-    title: "Laravel Backend + Next.js Frontend via Cloudflare Tunnel",
-    image: "/ProjectCloud/Deployment Laravel Backend And Nextjs Frontend Using API And Setup Cloudflare Tunnel/Deployment Laravel Backend And Nextjs Frontend Using API And Setup Cloudflare Tunnel1.png",
-    detailImage: "/ProjectCloud/Deployment Laravel Backend And Nextjs Frontend Using API And Setup Cloudflare Tunnel/Deployment Laravel Backend And Nextjs Frontend Using API And Setup Cloudflare Tunnel2.png",
-    tags: ["Laravel", "Next.js", "API", "Cloudflare"],
-    description: "Deployment full-stack dengan Laravel sebagai REST API backend dan Next.js sebagai frontend, terintegrasi melalui Cloudflare Tunnel untuk keamanan dan aksesibilitas optimal."
-  },
-  {
-    id: 109,
-    title: "Node.js API untuk IoT Sensor + Cloudflare Tunnel",
-    image: "/ProjectCloud/Deployment Node Js Api For IOT Sensor And Configuration With Cloudflare Tunnel/Deployment Node Js Api For IOT Sensor And Configuration With Cloudflare Tunnel1.png",
-    detailImage: "/ProjectCloud/Deployment Node Js Api For IOT Sensor And Configuration With Cloudflare Tunnel/Deployment Node Js Api For IOT Sensor And Configuration With Cloudflare Tunnel2.png",
-    tags: ["Node.js", "IoT", "API", "Cloudflare"],
-    description: "Deployment Node.js REST API yang dirancang untuk menerima data dari sensor IoT, dikonfigurasi dengan Cloudflare Tunnel agar sensor dapat mengirim data secara aman dari mana saja."
-  },
-  {
-    id: 110,
-    title: "NodeJs + AI + Restforge + PostgreSQL di VPS",
-    image: "/ProjectCloud/Deployment NodeJs + Ai + Frontend Restforge + Postgresql In VPS With Cloudflare Tunnel/Deployment NodeJs + Ai + Frontend Restforge In VPS With Cloudflare Tunnel1.png",
-    detailImage: "/ProjectCloud/Deployment NodeJs + Ai + Frontend Restforge + Postgresql In VPS With Cloudflare Tunnel/Deployment NodeJs + Ai + Frontend Restforge In VPS With Cloudflare Tunnel2.png",
-    tags: ["Node.js", "AI", "PostgreSQL", "VPS"],
-    description: "Deployment stack lengkap di VPS: Node.js backend, integrasi AI, frontend Restforge, dan PostgreSQL sebagai database, semua diekspos aman menggunakan Cloudflare Tunnel."
-  },
-  {
-    id: 111,
-    title: "Docker Compose: MySQL + NGINX + Laravel + Redis",
-    image: "/ProjectCloud/Setup Docker Compose To Start Mysql + Web Server Nginx Laravel + Redis/Setup Docker Compose To Start Mysql + Web Server Nginx Laravel + Redis1.png",
-    detailImage: "/ProjectCloud/Setup Docker Compose To Start Mysql + Web Server Nginx Laravel + Redis/Setup Docker Compose To Start Mysql + Web Server Nginx Laravel + Redis2.png",
-    tags: ["Docker Compose", "MySQL", "NGINX", "Redis"],
-    description: "Setup Docker Compose untuk menjalankan stack lengkap: MySQL sebagai database, NGINX sebagai web server, Laravel sebagai aplikasi backend, dan Redis untuk caching — semua dalam satu environment terkontainerisasi."
-  }
-];
-
-const certificates: Certificate[] = [
-  { id: 1, title: "Finalis Web Programming - SMART TELKOM", file: "/Sertifikat/SMART TELKOM FINALIS_Web Programing.jpg", type: "image" },
-  { id: 2, title: "Sefest Web Design", file: "/Sertifikat/Sefest Web Design-Radhiyya Alea Akbar.png", type: "image" },
-  { id: 3, title: "Juara 1 Pionering Tegak Tangguh", file: "/Sertifikat/Juara1PioneringLombaTegakTangguh.PNG", type: "image" },
-  { id: 4, title: "Lomba Baris Berbaris Pandawa - Juara Perintis 2", file: "/Sertifikat/Lomba Baris Berbaris Pandawa - Juara Perintis 2.png", type: "image" },
-  { id: 5, title: "Lomba Baris Berbaris Sejati - Juara Bina 2", file: "/Sertifikat/Lomba Baris Berbaris Sejati- Juara Bina 2.png", type: "image" },
-  { id: 6, title: "Olimpiade Informatika OSN 2025", file: "/Sertifikat/Olimpiade_Informatika - OSN 2025_page-0001.jpg", type: "image" },
-  { id: 7, title: "Olimpiade Informatika OSSN 2025", file: "/Sertifikat/Olimpiade_Informatika - OSSN 2025_page-0001.jpg", type: "image" },
-  { id: 8, title: "Olimpiade Informatika KOMPAS 2025", file: "/Sertifikat/Olimpiade_Informatika - KOMPAS 2025_page-0001.jpg", type: "image" },
-  { id: 9, title: "Olimpiade PKN OSN 2025", file: "/Sertifikat/Olimpiade_PKN - OSSN 2025 (1)_page-0001.jpg", type: "image" },
-  { id: 10, title: "Olimpiade PKN KOMPAS 2025", file: "/Sertifikat/Olimpiade_PKN - KOMPAS 2025_page-0001 (2).jpg", type: "image" },
-  { id: 11, title: "Olimpiade Sejarah OSN 2025", file: "/Sertifikat/Olimpiade_Sejarah - OSN 2025_page-0001.jpg", type: "image" },
-  { id: 12, title: "Olimpiade Sejarah KOMPAS 2025", file: "/Sertifikat/Olimpiade_Sejarah - KOMPAS 2025_page-0001.jpg", type: "image" },
-  { id: 13, title: "Coursera: AWS S3 Basic", file: "/Sertifikat/Coursera Aws S3 Basic Certificates.jpg", type: "image" },
-  { id: 14, title: "Coursera: Build App With Google Sheets On Glide", file: "/Sertifikat/Coursera Build App With Google Sheets On Glide Certificates.jpg", type: "image" },
-  { id: 15, title: "Coursera: Build a Full Website Using Wordpress", file: "/Sertifikat/Coursera Build a Full Website Using Wordprees Certificates.jpg", type: "image" },
-  { id: 16, title: "Coursera: Google Ads", file: "/Sertifikat/Coursera Google Ads Certificates.jpg", type: "image" },
-  { id: 17, title: "Coursera: Microsoft Excel", file: "/Sertifikat/Coursera Microsoft Excel Certificates.jpg", type: "image" },
-  { id: 18, title: "Coursera: SEO Optimization", file: "/Sertifikat/Coursera SEO Optimazion Certificates.jpg", type: "image" },
-  { id: 19, title: "Pelatihan Artificial Intelligence", file: "/Sertifikat/Pelatihan Artifisial Intelegent.jpg", type: "image" },
-  { id: 20, title: "Pelatihan Cyber Security", file: "/Sertifikat/Sertifikat Attendance Pelatihan Cyber Security.pdf.png", type: "image" },
-  { id: 21, title: "Microsoft Azure", file: "/Sertifikat/Microsoft Azure Certificates.pdf", type: "pdf" },
-  { id: 22, title: "Computational Thinking", file: "/Sertifikat/Sertifikat_RADHIYYA ALEA AKBAR_Computational Thinking _ Cara Berpikir Logis untuk Mengatasi Masalah (Jenjang SMA).pdf", type: "pdf" },
-  { id: 23, title: "Dasar-Dasar Implementasi Kecerdasan Artifisial", file: "/Sertifikat/Sertifikat_RADHIYYA ALEA AKBAR_Dasar-Dasar Implementasi Kecerdasan Artifisial.pdf", type: "pdf" },
-  { id: 24, title: "Memahami Aspek Pengembangan Produk AI", file: "/Sertifikat/Sertifikat_RADHIYYA ALEA AKBAR_Memahami Aspek Pengembangan Produk AI.pdf", type: "pdf" },
-  { id: 25, title: "Wordpress Certificates", file: "/Sertifikat/Wordpress Certivicates.pdf", type: "pdf" },
-];
+// Projects and Certificates are now fetched from the database
 
 export default function Home() {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  const [showAllCloud, setShowAllCloud] = useState(false);
+  const [activeCommentProject, setActiveCommentProject] = useState<Project | null>(null);
   const [activeTab, setActiveTab] = useState<"website" | "cloud">("website");
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+  
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [cloudProjects, setCloudProjects] = useState<Project[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch projects
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        setProjects(data.projects || []);
+        setCloudProjects(data.cloudProjects || []);
+        
+        // Fetch certificates
+        const certRes = await fetch('/api/certificates');
+        const certData = await certRes.json();
+        if (certData.certificates) {
+          const mappedCerts = certData.certificates.map((c: any) => ({
+            id: c.original_id,
+            title: c.title,
+            file: c.file_url,
+            type: c.type as 'image' | 'pdf'
+          }));
+          setCertificates(mappedCerts);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -286,10 +94,10 @@ export default function Home() {
 
     document.querySelectorAll(".reveal-animate").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [showAllProjects, showAllCloud, activeTab, showAllCertificates]);
+  }, [activeTab, showAllCertificates, isLoading, projects.length]);
 
-  const displayedProjects = showAllProjects ? projects : projects.slice(0, 6);
-  const displayedCloudProjects = showAllCloud ? cloudProjects : cloudProjects.slice(0, 6);
+  const displayedProjects = projects.slice(0, 6);
+  const displayedCloudProjects = cloudProjects.slice(0, 6);
   const displayedCertificates = showAllCertificates ? certificates : certificates.slice(0, 6);
 
   const techStack = [
@@ -316,42 +124,10 @@ export default function Home() {
   ];
 
   return (
+    <PixelReveal>
     <main className="relative min-h-screen w-full bg-[#f4f7f6] flex flex-col items-center pt-8 font-sans overflow-x-hidden">
-      {/* Header */}
-      <header className="animate-fade-in opacity-0 [animation-delay:100ms] relative w-full max-w-[1300px] px-6 lg:px-16 mx-auto flex justify-between items-center z-50">
-        <h1 className="text-2xl font-playfair font-medium italic text-slate-800 relative z-50">
-          Radhiyya
-        </h1>
-        
-        {/* Desktop Navbar */}
-        <nav className="hidden md:flex items-center gap-10 text-[15px] font-medium text-slate-500">
-          <a href="#" className="hover:text-black hover:-translate-y-0.5 transition-all duration-300">Home</a>
-          <a href="#projects" className="hover:text-black hover:-translate-y-0.5 transition-all duration-300">Work</a>
-          <a href="#about" className="hover:text-black hover:-translate-y-0.5 transition-all duration-300">About</a>
-          <a href="#contact" className="hover:text-black hover:-translate-y-0.5 transition-all duration-300">Contact</a>
-        </nav>
-
-        {/* Mobile/Tablet Menu Button */}
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center text-slate-700 hover:bg-gray-50 transition-colors shadow-sm cursor-pointer active:scale-95 relative z-50"
-        >
-          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-
-        {/* Mobile Dropdown Menu */}
-        {isMobileMenuOpen && (
-          <div className="absolute top-14 right-0 w-48 bg-white/95 backdrop-blur-md border border-gray-100 rounded-2xl shadow-xl p-4 flex flex-col gap-4 z-40 md:hidden">
-            <a href="#" className="text-sm font-medium text-slate-600 hover:text-black px-2 py-1 rounded-md hover:bg-slate-50 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Home</a>
-            <a href="#projects" className="text-sm font-medium text-slate-600 hover:text-black px-2 py-1 rounded-md hover:bg-slate-50 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Work</a>
-            <a href="#about" className="text-sm font-medium text-slate-600 hover:text-black px-2 py-1 rounded-md hover:bg-slate-50 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>About</a>
-            <a href="#contact" className="text-sm font-medium text-slate-600 hover:text-black px-2 py-1 rounded-md hover:bg-slate-50 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
-          </div>
-        )}
-      </header>
-
       {/* Main Hero Content */}
-      <div className="relative flex-1 w-full max-w-[1300px] px-6 lg:px-16 mx-auto flex flex-col items-center mt-8 md:mt-12 z-10">
+      <div id="home" className="relative flex-1 w-full max-w-[1300px] px-6 lg:px-16 mx-auto flex flex-col items-center mt-24 md:mt-24 z-10">
         
         {/* Large Text */}
         <div className="animate-fade-in-up opacity-0 [animation-delay:200ms] text-center z-20 flex flex-col items-center gap-2 mb-2 md:mb-0 relative md:-bottom-12">
@@ -460,7 +236,7 @@ export default function Home() {
       </div>
 
       {/* Principals Section */}
-      <section className="relative w-full max-w-[1300px] mx-auto pt-16 md:pt-24 pb-12 md:pb-16 px-6 flex flex-col items-center justify-center z-20">
+      <section id="about" className="relative w-full max-w-[1300px] mx-auto pt-16 md:pt-24 pb-12 md:pb-16 px-6 flex flex-col items-center justify-center z-20">
         <h3 className="text-4xl md:text-5xl font-playfair italic font-medium text-slate-800 mb-8 md:mb-12">
           My Principals
         </h3>
@@ -550,12 +326,15 @@ export default function Home() {
           {techStack.map((tech, index) => (
             <div 
               key={index}
-              className="group relative flex items-center justify-center bg-white/80 backdrop-blur-sm border border-slate-200/60 shadow-[0_4px_20px_rgb(0,0,0,0.03)] rounded-full h-14 px-4 hover:px-6 hover:-translate-y-1 hover:border-blue-400 hover:shadow-[0_8px_30px_rgb(59,130,246,0.15)] transition-all duration-300 cursor-default overflow-hidden"
+              className="group relative flex items-center justify-center bg-white/80 backdrop-blur-sm border border-slate-200/60 shadow-[0_4px_20px_rgb(0,0,0,0.03)] rounded-full w-14 h-14 hover:-translate-y-1 hover:border-blue-400 hover:shadow-[0_8px_30px_rgb(59,130,246,0.15)] transition-all duration-300 cursor-default"
             >
               <img src={tech.icon} alt={tech.name} className="w-6 h-6 object-contain flex-shrink-0" />
-              <span className="font-outfit font-medium text-slate-700 max-w-0 opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-3 transition-all duration-300 overflow-hidden whitespace-nowrap">
+              
+              {/* Tooltip */}
+              <div className="absolute bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2 px-3 py-1.5 bg-slate-800 text-white text-[13px] font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                 {tech.name}
-              </span>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-t-slate-800"></div>
+              </div>
             </div>
           ))}
         </div>
@@ -669,118 +448,63 @@ export default function Home() {
         </div>
         
         {activeTab === "website" ? (
+          isLoading ? <SkeletonGrid /> : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
               {displayedProjects.map((project, index) => (
-                <div 
+                <ProjectCard 
                   key={project.id} 
-                  onClick={() => setSelectedProject(project)}
-                  className={`reveal-animate opacity-0 translate-y-12 transition-all duration-1000 cursor-pointer group flex flex-col`}
-                  style={{ transitionDelay: `${(index % 3) * 150 + 100}ms` }}
-                >
-                  {/* Card Image Wrapper */}
-                  <div className="relative bg-[#f6f7f9] border border-white/60 p-4 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] group-hover:-translate-y-2 overflow-hidden">
-                    <div className="relative w-full aspect-[16/10] md:h-[260px] md:aspect-auto rounded-2xl overflow-hidden bg-slate-200">
-                      <Image 
-                        src={project.image} 
-                        alt={project.title} 
-                        fill 
-                        className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                      />
-                      
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-white text-slate-900 px-6 py-3 rounded-full font-medium text-sm transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                          View Details
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Info */}
-                  <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
-                    <h4 className="text-xl font-outfit font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      {project.title}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag, i) => (
-                        <span key={i} className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200/60">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                  project={project} 
+                  index={index}
+                  onClick={() => router.push(`/projects/${project.id}`)} 
+                  onOpenComments={() => setActiveCommentProject(project)}
+                />
               ))}
             </div>
 
             {/* View All Button */}
-            {!showAllProjects && projects.length > 6 && (
+            {projects.length > 6 && (
               <div className="mt-16 flex justify-center w-full">
-                <button 
-                  onClick={() => setShowAllProjects(true)}
+                <a 
+                  href="/projects?category=website"
                   className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                 >
                   Show All
                   <ArrowRight size={18} />
-                </button>
+                </a>
               </div>
             )}
           </>
+          )
         ) : (
+          isLoading ? <SkeletonGrid /> : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
               {displayedCloudProjects.map((project, index) => (
-                <div
-                  key={project.id}
-                  onClick={() => setSelectedProject(project)}
-                  className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 cursor-pointer group flex flex-col"
-                  style={{ transitionDelay: `${(index % 3) * 150 + 100}ms` }}
-                >
-                  <div className="relative bg-[#f6f7f9] border border-white/60 p-4 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] group-hover:-translate-y-2 overflow-hidden">
-                    <div className="relative w-full aspect-[16/10] md:h-[260px] md:aspect-auto rounded-2xl overflow-hidden bg-slate-200">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-white text-slate-900 px-6 py-3 rounded-full font-medium text-sm transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                          View Details
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-5 flex flex-col gap-3 px-2">
-                    <h4 className="text-lg font-outfit font-semibold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
-                      {project.title}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag, i) => (
-                        <span key={i} className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full border border-blue-100">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <ProjectCard 
+                  key={project.id} 
+                  project={project} 
+                  index={index}
+                  onClick={() => router.push(`/projects/${project.id}`)} 
+                  onOpenComments={() => setActiveCommentProject(project)}
+                />
               ))}
             </div>
 
             {/* Show All Cloud Button */}
-            {!showAllCloud && cloudProjects.length > 6 && (
+            {cloudProjects.length > 6 && (
               <div className="mt-16 flex justify-center w-full">
-                <button
-                  onClick={() => setShowAllCloud(true)}
+                <a
+                  href="/projects?category=cloud"
                   className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 flex items-center gap-2"
                 >
                   Show All
                   <ArrowRight size={18} />
-                </button>
+                </a>
               </div>
             )}
           </>
+          )
         )}
       </section>
 
@@ -794,57 +518,63 @@ export default function Home() {
           My Certificates
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-          {displayedCertificates.map((cert, index) => (
-            <div 
-              key={cert.id} 
-              onClick={() => setSelectedCertificate(cert)}
-              className={`reveal-animate opacity-0 translate-y-12 transition-all duration-1000 cursor-pointer group flex flex-col`}
-              style={{ transitionDelay: `${(index % 3) * 150 + 100}ms` }}
-            >
-              <div className="relative bg-[#f6f7f9] border border-white/60 p-4 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] group-hover:-translate-y-2 overflow-hidden">
-                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-200">
-                  {cert.type === "image" ? (
-                    <Image 
-                      src={cert.file} 
-                      alt={cert.title} 
-                      fill 
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 group-hover:scale-105 transition-transform duration-700 text-slate-400">
-                      <FileText size={48} strokeWidth={1.5} className="mb-2 text-blue-400/70" />
-                      <span className="text-sm font-medium text-slate-500">PDF Document</span>
-                    </div>
-                  )}
-                  
-                  <div className="absolute inset-0 z-20 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="bg-white text-slate-900 px-6 py-3 rounded-full font-medium text-sm transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                      View Certificate
+        {isLoading ? (
+          <SkeletonGrid />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+              {displayedCertificates.map((cert, index) => (
+                <div 
+                  key={cert.id} 
+                  onClick={() => setSelectedCertificate(cert)}
+                  className={`reveal-animate opacity-0 translate-y-12 transition-all duration-1000 cursor-pointer group flex flex-col`}
+                  style={{ transitionDelay: `${(index % 3) * 150 + 100}ms` }}
+                >
+                  <div className="relative bg-[#f6f7f9] border border-white/60 p-4 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] group-hover:-translate-y-2 overflow-hidden">
+                    <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-200">
+                      {cert.type === "image" ? (
+                        <Image unoptimized 
+                          src={cert.file} 
+                          alt={cert.title} 
+                          fill 
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 group-hover:scale-105 transition-transform duration-700 text-slate-400">
+                          <FileText size={48} strokeWidth={1.5} className="mb-2 text-blue-400/70" />
+                          <span className="text-sm font-medium text-slate-500">PDF Document</span>
+                        </div>
+                      )}
+                      
+                      <div className="absolute inset-0 z-20 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="bg-white text-slate-900 px-6 py-3 rounded-full font-medium text-sm transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                          View Certificate
+                        </div>
+                      </div>
                     </div>
                   </div>
+
+                  <div className="mt-6 flex flex-col gap-2 px-2 text-center">
+                    <h4 className="text-lg font-outfit font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {cert.title}
+                    </h4>
+                  </div>
                 </div>
-              </div>
-
-              <div className="mt-6 flex flex-col gap-2 px-2 text-center">
-                <h4 className="text-lg font-outfit font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
-                  {cert.title}
-                </h4>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {!showAllCertificates && certificates.length > 6 && (
-          <div className="mt-16 flex justify-center w-full">
-            <button 
-              onClick={() => setShowAllCertificates(true)}
-              className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
-            >
-              Show All
-              <ArrowRight size={18} />
-            </button>
-          </div>
+            {!showAllCertificates && certificates.length > 6 && (
+              <div className="mt-16 flex justify-center w-full">
+                <button 
+                  onClick={() => setShowAllCertificates(true)}
+                  className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
+                >
+                  Show All
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
 
@@ -862,7 +592,7 @@ export default function Home() {
             <div className="relative p-2 bg-white border border-slate-100 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] transform md:-rotate-2 hover:rotate-0 transition-transform duration-500">
               <div className="relative p-1 border-2 border-slate-100 rounded-2xl bg-white overflow-hidden">
                 <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200">
-                  <Image src="/AboutMePhoto.png" alt="Radhiyya Alea" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                  <Image unoptimized src="/fotoformal2.png" alt="Radhiyya Alea" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                 </div>
               </div>
             </div>
@@ -893,41 +623,177 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right: Description & Timeline */}
-          <div className="w-full lg:w-[55%] reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[500ms] pt-4">
-            <p className="text-[17px] md:text-[19px] text-slate-800 leading-relaxed font-outfit mb-12 font-medium">
+          {/* Right: Description */}
+          <div className="w-full lg:w-[55%] reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[500ms] pt-4 flex flex-col justify-center">
+            <p className="text-[18px] md:text-[20px] text-slate-800 leading-relaxed font-outfit mb-6 font-medium">
               I&apos;m a Web & Cloud Engineer passionate about learning, exploring ideas, and building digital experiences that solve real problems.
             </p>
+            <p className="text-[16px] md:text-[17px] text-slate-600 leading-relaxed font-outfit">
+              With a strong foundation in modern web technologies and cloud infrastructure, I strive to create scalable, efficient, and beautifully designed applications. My goal is to bridge the gap between design and engineering, ensuring that every project I touch is not only functional but also delivers an exceptional user experience.
+            </p>
+          </div>
+        </div>
+      </section>
 
-            <div className="flex flex-col gap-6 w-full">
-              {/* Timeline Item 1 */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-5">
-                <span className="font-bold text-slate-900 text-[15px]">Founder</span>
-                <div className="flex items-center justify-between sm:justify-end sm:gap-12 w-full sm:w-auto">
-                  <span className="text-slate-500 text-[14px] font-medium">Elevra Digitalera</span>
-                  <span className="text-slate-400 font-semibold text-[14px] w-20 text-right">2025</span>
+      {/* Work Experience Section */}
+      <section id="experience" className="relative w-full max-w-[1000px] mx-auto pt-16 pb-8 px-6 flex flex-col z-20">
+        <h3 className="text-3xl md:text-4xl font-outfit font-bold text-slate-900 mb-8 tracking-tight reveal-animate opacity-0 translate-y-8 transition-all duration-1000">
+          Work experience
+        </h3>
+
+        <div className="flex flex-col gap-5 reveal-animate opacity-0 translate-y-8 transition-all duration-1000 delay-[200ms]">
+          
+          {/* Experience Item 1: Elevra Digitalera */}
+          <div className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-7">
+                {/* Logo Box */}
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-slate-50/50 flex items-center justify-center shrink-0 border border-slate-200/60 group-hover:scale-105 transition-transform duration-500 overflow-hidden shadow-sm p-1.5 md:p-2">
+                  <Image 
+                    unoptimized 
+                    src="/work/Elevra Digital Era Logo.png" 
+                    alt="Elevra Digitalera" 
+                    width={80} 
+                    height={80} 
+                    className="object-contain w-full h-full"
+                  />
+                </div>
+                {/* Info */}
+                <div>
+                  <h4 className="text-[20px] md:text-[22px] font-bold text-slate-900 mb-1">Fullstack Developer</h4>
+                  <h5 className="text-[15px] md:text-[16px] font-semibold text-blue-600 mb-4">Elevra Digitalera</h5>
+                  
+                  <div className="flex flex-wrap items-center gap-3 md:gap-5 text-[13px] md:text-[14px] text-slate-500 font-medium">
+                    <div className="flex items-center gap-1.5"><Calendar size={16} className="text-slate-400" /> 2025 - Present</div>
+                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> Remote, Indonesia</div>
+                    <div className="flex items-center gap-1.5"><Briefcase size={16} className="text-slate-400" /> Freelance</div>
+                  </div>
                 </div>
               </div>
-              
-              {/* Timeline Item 2 */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-5">
-                <span className="font-bold text-slate-900 text-[15px]">Finalis Web Developer</span>
-                <div className="flex items-center justify-between sm:justify-end sm:gap-12 w-full sm:w-auto">
-                  <span className="text-slate-500 text-[14px] font-medium">JYCC, Jatim Innovator</span>
-                  <span className="text-slate-400 font-semibold text-[14px] w-20 text-right">2025</span>
-                </div>
+              <div className="text-slate-400 group-hover:text-slate-800 transition-transform duration-300 group-hover:rotate-180 hidden sm:block">
+                <ChevronDown size={20} />
               </div>
+            </div>
 
-              {/* Timeline Item 3 */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-5">
-                <span className="font-bold text-slate-900 text-[15px]">Cloud Engineer</span>
-                <div className="flex items-center justify-between sm:justify-end sm:gap-12 w-full sm:w-auto">
-                  <span className="text-slate-500 text-[14px] font-medium">Skomda</span>
-                  <span className="text-slate-400 font-semibold text-[14px] w-20 text-right">2025-2026</span>
+            {/* Hover Content */}
+            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+              <div className="overflow-hidden">
+                <div className="pt-6 mt-6 border-t border-slate-100">
+                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">Contributions :</h6>
+                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed">
+                    <li>Developing complete web application solutions spanning both frontend and backend architectures.</li>
+                    <li>Collaborating closely with clients to translate business requirements into high-quality, scalable code.</li>
+                    <li>Ensuring stability through rigorous testing, bug fixes, performance optimizations, and responsive design implementations.</li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Experience Item 2: PT Data Inti Prima */}
+          <div className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-7">
+                {/* Logo Box */}
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-slate-50/50 flex items-center justify-center shrink-0 border border-slate-200/60 group-hover:scale-105 transition-transform duration-500 overflow-hidden shadow-sm p-1.5 md:p-2">
+                  <Image 
+                    unoptimized 
+                    src="/work/logo-dataintiprima-2.png" 
+                    alt="PT Data Inti Prima" 
+                    width={80} 
+                    height={80} 
+                    className="object-contain w-full h-full"
+                  />
+                </div>
+                {/* Info */}
+                <div>
+                  <h4 className="text-[20px] md:text-[22px] font-bold text-slate-900 mb-1">Backend Developer Intern</h4>
+                  <h5 className="text-[15px] md:text-[16px] font-semibold text-blue-600 mb-4">PT Data Inti Prima</h5>
+                  
+                  <div className="flex flex-wrap items-center gap-3 md:gap-5 text-[13px] md:text-[14px] text-slate-500 font-medium">
+                    <div className="flex items-center gap-1.5"><Calendar size={16} className="text-slate-400" /> 1 Month</div>
+                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> Indonesia</div>
+                    <div className="flex items-center gap-1.5"><Briefcase size={16} className="text-slate-400" /> Internship</div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-slate-400 group-hover:text-slate-800 transition-transform duration-300 group-hover:rotate-180 hidden sm:block">
+                <ChevronDown size={20} />
+              </div>
+            </div>
+
+            {/* Hover Content */}
+            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+              <div className="overflow-hidden">
+                <div className="pt-6 mt-6 border-t border-slate-100">
+                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">Contributions :</h6>
+                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed">
+                    <li>Developed a robust Facility Helpdesk website from scratch as part of a school internship project.</li>
+                    <li>Built the backend infrastructure using Node.js and Next.js, integrating with a PostgreSQL database.</li>
+                    <li>Leveraged the Restforge framework to accelerate API development and streamline data management.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Education Section */}
+      <section id="education" className="relative w-full max-w-[1000px] mx-auto pt-8 pb-24 px-6 flex flex-col z-20">
+        <h3 className="text-3xl md:text-4xl font-outfit font-bold text-slate-900 mb-8 tracking-tight reveal-animate opacity-0 translate-y-8 transition-all duration-1000 delay-[100ms]">
+          Education
+        </h3>
+
+        <div className="flex flex-col gap-5 reveal-animate opacity-0 translate-y-8 transition-all duration-1000 delay-[300ms]">
+          
+          {/* Education Item */}
+          <div className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-7">
+                {/* Logo Box */}
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-slate-50/50 flex items-center justify-center shrink-0 border border-slate-200/60 group-hover:scale-105 transition-transform duration-500 overflow-hidden p-1.5 md:p-2 shadow-sm">
+                  <Image 
+                    unoptimized 
+                    src="/smktelkomlogo.jpg" 
+                    alt="SMK Telkom Sidoarjo" 
+                    width={80} 
+                    height={80} 
+                    className="object-contain w-full h-full"
+                  />
+                </div>
+                {/* Info */}
+                <div>
+                  <h4 className="text-[20px] md:text-[22px] font-bold text-slate-900 mb-1">SMK Telkom Sidoarjo</h4>
+                  <h5 className="text-[15px] md:text-[16px] font-semibold text-slate-700 mb-4">Vocational High School, Sistem Informasi Jaringan Aplikasi (SIJA)</h5>
+                  
+                  <div className="flex flex-wrap items-center gap-3 md:gap-5 text-[13px] md:text-[14px] text-slate-500 font-medium">
+                    <div className="flex items-center gap-1.5"><Calendar size={16} className="text-slate-400" /> 4 Year Program</div>
+                    <div className="flex items-center gap-1.5"><MapPin size={16} className="text-slate-400" /> Sidoarjo, Indonesia</div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-slate-400 group-hover:text-slate-800 transition-transform duration-300 group-hover:rotate-180 hidden sm:block">
+                <ChevronDown size={20} />
+              </div>
+            </div>
+
+            {/* Hover Content */}
+            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+              <div className="overflow-hidden">
+                <div className="pt-6 mt-6 border-t border-slate-100">
+                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">Key Focus :</h6>
+                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed">
+                    <li>Cloud computing fundamentals and modern web development techniques.</li>
+                    <li>Network infrastructure design, maintenance, and security protocols.</li>
+                    <li>Application integration, database management, and industry-standard best practices for software engineering.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </section>
 
@@ -965,7 +831,7 @@ export default function Home() {
             >
               <div className="relative p-2 border-2 border-slate-100 rounded-3xl bg-white overflow-hidden">
                 <div className="relative w-full aspect-[4/3] md:aspect-[16/10] rounded-2xl overflow-hidden bg-slate-200">
-                  <Image 
+                  <Image unoptimized 
                     src="/ELEVRA-LANDINGPAGE.png" 
                     alt="Elevra Digitalera Landing Page" 
                     fill 
@@ -981,102 +847,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Scattered Collage Section */}
-      <section className="relative w-full min-h-[80vh] md:min-h-[140vh] flex flex-col items-center justify-center py-10 md:py-56 overflow-hidden z-10 border-t border-slate-200/50 bg-[#f4f7f6]">
-        
-        {/* Central Text */}
-        <div className="relative z-20 flex flex-col items-center text-center px-6 max-w-2xl reveal-animate opacity-0 translate-y-12 transition-all duration-1000 pointer-events-none">
-          <h2 className="text-3xl md:text-4xl lg:text-[3.25rem] font-outfit font-semibold tracking-tight text-slate-900 mb-4 leading-tight">
-            On a quest to craft <br className="hidden md:block" />
-            something awesome
-          </h2>
-          <p className="text-lg md:text-xl lg:text-2xl font-playfair italic text-slate-500 mt-2">
-            to hone my skills or just for fun
-          </p>
-        </div>
-
-        {/* Scattered Images */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
-          
-          {/* 1. Top Left Corner */}
-          <div className="absolute top-[18%] left-[-5%] md:top-[15%] md:left-[4%] w-[180px] md:w-[420px] transform -rotate-[12deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[100ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[0].image} alt="Project 1" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 2. Top Mid-Left */}
-          <div className="absolute top-[14%] left-[25%] md:top-[12%] md:left-[28%] w-[180px] md:w-[400px] transform rotate-[4deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[150ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[1].image} alt="Project 2" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 3. Top Mid-Right */}
-          <div className="absolute top-[16%] right-[5%] md:top-[14%] md:right-[28%] w-[180px] md:w-[420px] transform -rotate-[6deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[200ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[2].image} alt="Project 3" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 4. Top Right Corner (Picka Photobooth) */}
-          <div className="absolute top-[25%] right-[-25%] md:top-[18%] md:right-[5%] w-[180px] md:w-[440px] transform rotate-[10deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[250ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[3].image} alt="Project 4" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 5. Mid-Upper Far Left (Web Jatim) */}
-          <div className="absolute top-[35%] left-[-40%] md:top-[35%] md:left-[2%] w-[180px] md:w-[450px] transform rotate-[8deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[300ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[4].image} alt="Project 5" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 6. Mid-Lower Far Left (Z-Learn) */}
-          <div className="absolute top-[48%] left-[-35%] md:top-[55%] md:left-[2%] w-[180px] md:w-[400px] transform -rotate-[10deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[350ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[5].image} alt="Project 6" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 7. Mid-Upper Far Right */}
-          <div className="absolute top-[35%] right-[-35%] md:top-[32%] md:right-[2%] w-[180px] md:w-[460px] transform -rotate-[5deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[400ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[6].image} alt="Project 7" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 8. Mid-Lower Far Right (Assignment Management) */}
-          <div className="absolute top-[50%] right-[-35%] md:top-[52%] md:right-[2%] w-[180px] md:w-[430px] transform rotate-[12deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[450ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[7].image} alt="Project 8" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 9. Bottom Left Corner */}
-          <div className="absolute bottom-[18%] left-[-10%] md:bottom-[10%] md:left-[8%] w-[180px] md:w-[450px] transform rotate-[6deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[500ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[8].image} alt="Project 9" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 10. Bottom Mid (Watu Pari) */}
-          <div className="absolute bottom-[8%] left-[20%] md:bottom-[6%] md:left-[35%] w-[180px] md:w-[440px] transform -rotate-[3deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[550ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[9].image} alt="Project 10" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-          {/* 11. Bottom Right Corner (Dashboard) */}
-          <div className="absolute bottom-[15%] right-[-10%] md:bottom-[8%] md:right-[10%] w-[180px] md:w-[470px] transform rotate-[4deg] transition-all duration-500 hover:rotate-0 hover:scale-105 hover:z-30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.2)] pointer-events-auto rounded-xl md:rounded-[2rem] border-[6px] md:border-[12px] border-white shadow-xl bg-white reveal-animate opacity-0 translate-y-12 delay-[600ms] group p-1 md:p-2">
-            <div className="w-full h-auto overflow-hidden rounded-lg md:rounded-2xl">
-              <Image src={projects[10].image} alt="Project 11" width={800} height={600} className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" />
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       {/* Project Modal */}
       {selectedProject && (
@@ -1104,7 +874,47 @@ export default function Home() {
                 ))}
               </div>
               <h3 className="text-3xl sm:text-4xl font-outfit font-semibold text-slate-900 mb-6">{selectedProject.title}</h3>
-              <p className="text-slate-600 text-[15px] leading-relaxed max-w-2xl">{selectedProject.description}</p>
+              <p className="text-slate-600 text-[15px] leading-relaxed max-w-2xl mb-6">{selectedProject.description}</p>
+              
+              {selectedProject.collaborators && selectedProject.collaborators.length > 0 && (
+                <div className="pt-6 border-t border-slate-100 flex flex-col gap-2">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Collaborators</span>
+                  <div className="flex flex-wrap gap-3">
+                    {selectedProject.collaborators.map((col: any) => {
+                      const pillContent = (
+                        <>
+                          <div className="w-5 h-5 relative rounded-full overflow-hidden border border-slate-200 shrink-0">
+                            <img src={col.avatar_url?.includes('i.ibb.co') ? `https://wsrv.nl/?url=${encodeURIComponent(col.avatar_url)}` : col.avatar_url} alt={col.name} className="w-full h-full object-cover" />
+                          </div>
+                          <span>{col.name}</span>
+                          {col.portfolio_url && (
+                            <svg className="w-3 h-3 text-slate-400 group-hover/collink:text-blue-600 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          )}
+                        </>
+                      );
+
+                      return col.portfolio_url ? (
+                        <a 
+                          key={col.id} 
+                          href={col.portfolio_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all rounded-full text-xs font-semibold text-slate-700 group/collink"
+                          title={`Buka portofolio ${col.name}`}
+                        >
+                          {pillContent}
+                        </a>
+                      ) : (
+                        <div key={col.id} className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-xs font-semibold text-slate-700">
+                          {pillContent}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1153,41 +963,31 @@ export default function Home() {
         </div>
       )}
 
+      {/* Testimonials Section */}
+      <StaggerTestimonials />
+
       {/* CTA Section */}
-      <section id="contact" className="relative w-full pt-32 pb-40 flex flex-col items-center justify-center text-center z-20 mt-10">
-        {/* Top Blue Noise/Glow */}
-        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[200%] md:w-[150%] h-[350px] bg-blue-400/30 blur-[100px] md:blur-[120px] rounded-[100%] pointer-events-none -z-10" />
-        
-        <div className="w-full px-6 flex flex-col items-center">
-          <h2 className="text-5xl md:text-[5rem] font-outfit font-medium tracking-tight text-slate-900 mb-6 reveal-animate opacity-0 translate-y-12 transition-all duration-1000">
-            Let&apos;s Build Something Great
-          </h2>
-          <p className="text-[17px] md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
-            Open to new opportunities, collaborations, and meaningful projects. Let&apos;s build something impactful together.
-          </p>
-          <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms]">
-            <a href="#" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300">
-              <ArrowRight size={20} />
-              Get in Touch
-            </a>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* Footer */}
-      <footer className="w-full py-8 border-t border-slate-200/60 bg-[#f4f7f6]">
-        <div className="max-w-[1300px] px-6 lg:px-16 mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-slate-500 text-[15px] font-medium">
-            © {new Date().getFullYear()} Radhiyya Alea. All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            <a href="#" className="text-[15px] font-semibold text-slate-500 hover:text-blue-600 transition-colors">LinkedIn</a>
-            <a href="#" className="text-[15px] font-semibold text-slate-500 hover:text-pink-600 transition-colors">Instagram</a>
-            <a href="#" className="text-[15px] font-semibold text-slate-500 hover:text-green-600 transition-colors">Email</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
+
+      {/* Comment Sidebar */}
+      <CommentSidebar 
+        project={activeCommentProject} 
+        isOpen={!!activeCommentProject} 
+        onClose={() => setActiveCommentProject(null)} 
+        onCommentAdded={() => {
+          // Increment the comment count visually for the active project
+          if (activeCommentProject) {
+            const updateCount = (p: Project) => p.id === activeCommentProject.id ? { ...p, commentCount: (p.commentCount || 0) + 1 } : p;
+            setProjects(projects.map(updateCount));
+            setCloudProjects(cloudProjects.map(updateCount));
+          }
+        }}
+      />
 
     </main>
+    </PixelReveal>
   );
 }

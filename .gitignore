@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+*.log
 
 # debug
 npm-debug.log*
@@ -30,11 +31,25 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (NEVER commit secrets to public GitHub)
 .env*
+.env
 
-# vercel
+# temporary migration & setup scripts
+add_col.js
+add_comments_table.js
+add_gallery_col.js
+migrate-certificates.js
+migrate-collaborators.js
+migrate.js
+update_all_tags.js
+update_worksim_tags.js
+upload-certificates.js
+*.js
+
+# vercel & netlify build folders
 .vercel
+.netlify
 
 # typescript
 *.tsbuildinfo
