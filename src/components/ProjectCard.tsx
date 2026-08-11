@@ -84,6 +84,44 @@ interface ProjectCardProps {
   onOpenComments: () => void;
 }
 
+export function parseInlineFormatting(text: string) {
+  if (!text) return null;
+  const parts: (string | React.ReactNode)[] = [];
+  const regex = /(\*\*[^*]+\*\*|\*[^*]+\*|_[^_]+_)/g;
+  let match;
+  let lastIndex = 0;
+  let keyIdx = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+
+    const matchedStr = match[0];
+    if (matchedStr.startsWith('**') && matchedStr.endsWith('**')) {
+      parts.push(
+        <strong key={keyIdx++} className="font-bold text-slate-900">
+          {matchedStr.slice(2, -2)}
+        </strong>
+      );
+    } else if ((matchedStr.startsWith('*') && matchedStr.endsWith('*')) || (matchedStr.startsWith('_') && matchedStr.endsWith('_'))) {
+      parts.push(
+        <em key={keyIdx++} className="italic text-slate-800 font-semibold">
+          {matchedStr.slice(1, -1)}
+        </em>
+      );
+    }
+
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 export default function ProjectCard({ project, index, onClick, onOpenComments }: ProjectCardProps) {
   const [reactions, setReactions] = useState<Record<string, number>>(project.reactions || {});
   const [userReactions, setUserReactions] = useState<Record<string, boolean>>({});
@@ -138,7 +176,7 @@ export default function ProjectCard({ project, index, onClick, onOpenComments }:
       style={{ transitionDelay: `${(index % 3) * 150 + 100}ms` }}
     >
       {/* Card Image Wrapper */}
-      <div className="relative w-full aspect-[16/10] md:h-[240px] md:aspect-auto rounded-t-[2rem] overflow-hidden bg-[#f6f7f9] shrink-0 border-b border-slate-100">
+      <div className="relative w-full aspect-[16/9] rounded-t-[2rem] overflow-hidden bg-[#f6f7f9] shrink-0 border-b border-slate-100">
         <Image unoptimized 
           src={project?.image || "https://wsrv.nl/?url=https%3A%2F%2Fi.ibb.co%2FV0CvQLrN%2FWorksim.png"} 
           alt={project.title} 
@@ -230,7 +268,7 @@ export default function ProjectCard({ project, index, onClick, onOpenComments }:
           )}
         </div>
         <p className="text-slate-500 text-[15px] leading-relaxed font-medium mb-8 line-clamp-2">
-          {project.description}
+          {parseInlineFormatting(project.description)}
         </p>
         
         {/* Tech Stack */}

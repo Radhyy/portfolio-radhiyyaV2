@@ -10,6 +10,7 @@ import CommentSidebar from '@/components/CommentSidebar';
 import SkeletonGrid from '@/components/SkeletonGrid';
 import Footer from '@/components/Footer';
 import CTASection from '@/components/CTASection';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Project {
   id: number;
@@ -28,6 +29,7 @@ interface Project {
 
 function ProjectsContent() {
   const router = useRouter();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') === 'cloud' ? 'cloud' : 'website';
   
@@ -89,20 +91,20 @@ function ProjectsContent() {
             <Home size={16} />
           </Link>
           <ChevronRight size={14} className="text-slate-400" />
-          <span className="text-blue-600 font-semibold">Projects</span>
+          <span className="text-blue-600 font-semibold">{t('navProjects')}</span>
         </div>
 
         {/* Title & Subtitle */}
         <h1 className="text-5xl md:text-6xl font-outfit font-bold text-slate-900 mb-4 tracking-tight">
-          Projects
+          {t('allProjectsTitle')}
         </h1>
         <p className="text-slate-600 text-lg md:text-xl max-w-2xl font-medium leading-relaxed">
-          A collection of projects representing my technical expertise as a Web & Cloud Engineer, highlighting the process and technical decisions.
+          {t('allProjectsSubtitle')}
         </p>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 w-full max-w-[1300px] px-6 lg:px-16 mx-auto pb-32 relative z-10">
+      <div className="flex-1 w-full max-w-[1300px] px-6 lg:px-16 mx-auto pb-32 relative z-10 font-outfit">
         {/* Category Tabs & Search */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
           <div className="flex items-center gap-4 w-full md:w-auto">
@@ -110,13 +112,13 @@ function ProjectsContent() {
               onClick={() => setActiveTab("website")}
               className={`px-8 py-3 rounded-full font-outfit font-medium transition-all duration-300 ${activeTab === "website" ? "bg-slate-900 text-white shadow-[0_8px_30px_rgb(0,0,0,0.15)]" : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"}`}
             >
-              Website
+              {t('filterWeb')}
             </button>
             <button 
               onClick={() => setActiveTab("cloud")}
               className={`px-8 py-3 rounded-full font-outfit font-medium transition-all duration-300 ${activeTab === "cloud" ? "bg-slate-900 text-white shadow-[0_8px_30px_rgb(0,0,0,0.15)]" : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"}`}
             >
-              Cloud
+              {t('filterCloud')}
             </button>
           </div>
 
@@ -125,7 +127,7 @@ function ProjectsContent() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input
               type="text"
-              placeholder="Search projects by name, description, or tech stack..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-11 pr-4 py-3 rounded-full bg-white border border-slate-200 text-slate-700 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm placeholder:text-slate-400"

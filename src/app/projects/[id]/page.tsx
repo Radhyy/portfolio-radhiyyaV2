@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 import CTASection from '@/components/CTASection';
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import { Project } from '@/types/project';
+import { useLanguage } from '@/context/LanguageContext';
 
 // Simple Markdown / Rich Text parser for formatted descriptions
 function FormattedDescription({ text }: { text: string }) {
@@ -95,6 +96,7 @@ function parseInlineFormatting(text: string) {
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const { t } = useLanguage();
   
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -232,7 +234,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </Link>
           <ChevronRight size={14} className="text-slate-400" />
           <Link href="/projects" className="text-slate-600 hover:text-slate-900 transition-colors">
-            Projects
+            {t('navProjects')}
           </Link>
           <ChevronRight size={14} className="text-slate-400" />
           <span className="text-blue-600 font-semibold truncate max-w-[200px] sm:max-w-[300px]">
@@ -265,7 +267,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             {/* Main Featured Display Image */}
             <div 
               onClick={() => setLightboxOpen(true)}
-              className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-[2rem] overflow-hidden bg-slate-900 shadow-xl border border-slate-200 cursor-pointer group"
+              className="relative w-full aspect-[16/9] rounded-[2rem] overflow-hidden bg-slate-900 shadow-xl border border-slate-200 cursor-pointer group"
             >
               <Image 
                 src={allImages[activeImageIndex]} 

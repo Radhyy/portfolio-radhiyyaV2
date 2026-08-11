@@ -3,69 +3,127 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, MessageSquareQuote } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/context/LanguageContext';
 
 const SQRT_5000 = Math.sqrt(5000);
 
-const testimonials = [
+const testimonialsID = [
   {
     tempId: 0,
     testimonial: "Kolaborasi bareng Radhiyya di proyek Jatim Innovator JYCC seru banget. Hasil kodingannya rapi, pengerjaan frontend-nya cepat, dan aplikasinya sangat responsif!",
-    by: "Sandya Hafidudin, Collaborator Web Jatim Innovator JYCC",
+    by: "Sandya Hafidudin, Kolaborator Web Jatim Innovator JYCC",
     imgSrc: "blank"
   },
   {
     tempId: 1,
     testimonial: "Website Posyandu Sedap Malam hasilnya sangat memuaskan. Sekarang sistem pencatatan data lansia dan balita jadi lebih praktis dan tertata rapi.",
-    by: "Leo Karang Dalo, Client Web Posyandu Sedap Malam",
+    by: "Leo Karang Dalo, Klien Web Posyandu Sedap Malam",
     imgSrc: "blank"
   },
   {
     tempId: 2,
     testimonial: "Website Teffyla Motor tampilannya modern dan ringan banget saat diakses. Sangat membantu pelanggan kami cari informasi produk dengan mudah!",
-    by: "Fredimus Kasang, Client Web Teffyla Motor",
+    by: "Fredimus Kasang, Klien Web Teffyla Motor",
     imgSrc: "blank"
   },
   {
     tempId: 3,
     testimonial: "Pengerjaan website Apotik Lehan Farma sangat profesional. Fitur pencarian obat dan katalog produknya mudah dipakai oleh siapapun.",
-    by: "Lehan Farma, Client Web Apotik Lehan Farma",
+    by: "Lehan Farma, Klien Web Apotik Lehan Farma",
     imgSrc: "blank"
   },
   {
     tempId: 4,
     testimonial: "Website NDJ Jok Mobil beneran bantu ningkatin kepercayaan pelanggan. Tampilan galeri jok mobilnya kelihatan sangat menarik dan profesional!",
-    by: "Admin NJD Jok Mobil, Client Web NDJ Jok Mobil",
+    by: "Admin NJD Jok Mobil, Klien Web NDJ Jok Mobil",
     imgSrc: "blank"
   },
   {
     tempId: 5,
     testimonial: "Website portfolio buatan Radhiyya pengerjaannya cepat dan hasilnya sesuai ekspektasi. Tampilan visualnya bagus dan estetik!",
-    by: "Iman Jihad, Client Web Portfolio",
+    by: "Iman Jihad, Klien Web Portfolio",
     imgSrc: "blank"
   },
   {
     tempId: 6,
     testimonial: "Puas banget sama hasil website portfolio saya. Transisi dan animasi UI-nya halus banget, kelihatan keren dan interaktif!",
-    by: "Ammar Wicaksono, Client Portfolio Ammar",
+    by: "Ammar Wicaksono, Klien Portfolio Ammar",
     imgSrc: "blank"
   },
   {
     tempId: 7,
     testimonial: "Website Harmonia Pharma dibuat dengan rapi, aman, dan aksesnya kencang. Komunikasi dan kerja samanya sangat menyenangkan!",
-    by: "Cecilia Permata, Client Web Harmonia Pharma",
+    by: "Cecilia Permata, Klien Web Harmonia Pharma",
     imgSrc: "blank"
   },
   {
     tempId: 8,
     testimonial: "Website Percetakan Yasin membantu sekali untuk terima pesanan online. Tampilannya simpel, responsif, dan mudah digunakan oleh pelanggan.",
-    by: "Andi Mutawakal, Client Web Percetakan Yasin",
+    by: "Andi Mutawakal, Klien Web Percetakan Yasin",
+    imgSrc: "blank"
+  }
+];
+
+const testimonialsEN = [
+  {
+    tempId: 0,
+    testimonial: "Collaborating with Radhiyya on the Jatim Innovator JYCC project was amazing. Clean code, fast frontend execution, and extremely responsive application!",
+    by: "Sandya Hafidudin, Web Collaborator Jatim Innovator JYCC",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 1,
+    testimonial: "The Posyandu Sedap Malam website exceeded expectations. Now recording data for elderly and toddlers is much more practical and organized.",
+    by: "Leo Karang Dalo, Client Posyandu Sedap Malam Web",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 2,
+    testimonial: "Teffyla Motor's website is sleek, modern, and loads incredibly fast. It tremendously helps our customers find product details easily!",
+    by: "Fredimus Kasang, Client Teffyla Motor Web",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 3,
+    testimonial: "The development of Apotik Lehan Farma website was handled very professionally. Medicine search and product catalog are intuitive for everyone.",
+    by: "Lehan Farma, Client Apotik Lehan Farma Web",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 4,
+    testimonial: "NDJ Jok Mobil website really boosted our customers' trust. The car seat gallery showcase looks visually striking and professional!",
+    by: "Admin NJD Jok Mobil, Client NDJ Jok Mobil Web",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 5,
+    testimonial: "The portfolio website built by Radhiyya was delivered quickly and met all expectations. Outstanding aesthetics and visual presentation!",
+    by: "Iman Jihad, Client Portfolio Web",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 6,
+    testimonial: "Extremely pleased with my portfolio website. The UI transitions and animations are buttery smooth, looking super cool and interactive!",
+    by: "Ammar Wicaksono, Client Ammar Portfolio",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 7,
+    testimonial: "Harmonia Pharma website is crafted neatly, securely, and with fast load times. Communication and collaboration were delightful!",
+    by: "Cecilia Permata, Client Harmonia Pharma Web",
+    imgSrc: "blank"
+  },
+  {
+    tempId: 8,
+    testimonial: "Percetakan Yasin website helped us immensely in receiving online orders. Clean, responsive design that is easy for customers to navigate.",
+    by: "Andi Mutawakal, Client Percetakan Yasin Web",
     imgSrc: "blank"
   }
 ];
 
 interface TestimonialCardProps {
   position: number;
-  testimonial: typeof testimonials[0];
+  testimonial: typeof testimonialsID[0];
   handleMove: (steps: number) => void;
   cardSize: number;
 }
@@ -152,22 +210,25 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 };
 
 export const StaggerTestimonials: React.FC = () => {
+  const { t, language } = useLanguage();
   const [cardSize, setCardSize] = useState(365);
-  const [testimonialsList, setTestimonialsList] = useState(testimonials);
+  const [testimonialsList, setTestimonialsList] = useState(language === 'EN' ? testimonialsEN : testimonialsID);
+
+  useEffect(() => {
+    setTestimonialsList(language === 'EN' ? testimonialsEN : testimonialsID);
+  }, [language]);
 
   const handleMove = (steps: number) => {
     const newList = [...testimonialsList];
     if (steps > 0) {
-      for (let i = steps; i > 0; i--) {
+      for (let i = 0; i < steps; i++) {
         const item = newList.shift();
-        if (!item) return;
-        newList.push({ ...item, tempId: Math.random() });
+        if (item) newList.push(item);
       }
     } else {
-      for (let i = steps; i < 0; i++) {
+      for (let i = 0; i < Math.abs(steps); i++) {
         const item = newList.pop();
-        if (!item) return;
-        newList.unshift({ ...item, tempId: Math.random() });
+        if (item) newList.unshift(item);
       }
     }
     setTestimonialsList(newList);
@@ -175,8 +236,10 @@ export const StaggerTestimonials: React.FC = () => {
 
   useEffect(() => {
     const updateSize = () => {
-      const { matches } = window.matchMedia("(min-width: 640px)");
-      setCardSize(matches ? 365 : 290);
+      const width = window.innerWidth;
+      if (width < 640) setCardSize(280);
+      else if (width < 1024) setCardSize(320);
+      else setCardSize(365);
     };
 
     updateSize();
@@ -194,7 +257,7 @@ export const StaggerTestimonials: React.FC = () => {
           <span>TESTIMONIALS</span>
         </div>
         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
-          What Collaborators & Clients Say
+          {t('testimonialsTitle')}
         </h2>
       </div>
 

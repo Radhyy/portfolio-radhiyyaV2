@@ -29,6 +29,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Providers from "@/components/Providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,8 +42,10 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${outfit.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans text-slate-900 bg-[#FAFAFA]">
-        <ClientNavbar />
-        {children}
+        <Providers>
+          <ClientNavbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -1,24 +1,29 @@
+"use client";
+
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import LocalTime from './LocalTime';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function CTASection() {
+  const { t } = useLanguage();
+
   return (
     <section id="contact" className="relative w-full pt-40 pb-24 flex flex-col items-center justify-center text-center z-20 bg-[#f4f7f6] overflow-hidden">
       {/* Top Blue Noise/Glow */}
       <div className="absolute top-[180px] left-1/2 -translate-x-1/2 w-[200%] md:w-[150%] h-[350px] bg-blue-400/30 blur-[100px] md:blur-[120px] rounded-[100%] pointer-events-none -z-10" />
       
       <div className="w-full px-6 flex flex-col items-center">
-        <h2 className="text-5xl md:text-[5rem] font-outfit font-medium tracking-tight text-slate-900 mb-6 reveal-animate opacity-0 translate-y-12 transition-all duration-1000">
-          Let&apos;s Build Something Great
+        <h2 className="text-4xl md:text-[4rem] font-outfit font-medium tracking-tight text-slate-900 mb-6 reveal-animate opacity-0 translate-y-12 transition-all duration-1000 max-w-3xl">
+          {t('ctaTitle')}
         </h2>
         <p className="text-[17px] md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
-          Open to new opportunities, collaborations, and meaningful projects. Let&apos;s build something impactful together.
+          {t('ctaSubtitle')}
         </p>
         <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms]">
-          <a href="#" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300">
+          <a href="mailto:raaakb87@gmail.com" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300">
             <ArrowRight size={20} />
-            Get in Touch
+            {t('ctaButton')}
           </a>
         </div>
 

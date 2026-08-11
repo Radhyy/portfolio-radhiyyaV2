@@ -13,6 +13,8 @@ import LocalTime from "@/components/LocalTime";
 import CTASection from "@/components/CTASection";
 import PixelReveal from "@/components/PixelReveal";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
+import ScrollMorphHero from "@/components/ui/scroll-morph-hero";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Project {
   id: number;
@@ -37,6 +39,7 @@ interface Certificate {
 
 export default function Home() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeCommentProject, setActiveCommentProject] = useState<Project | null>(null);
@@ -47,6 +50,7 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [cloudProjects, setCloudProjects] = useState<Project[]>([]);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -125,14 +129,14 @@ export default function Home() {
 
   return (
     <PixelReveal>
-    <main className="relative min-h-screen w-full bg-[#f4f7f6] flex flex-col items-center pt-8 font-sans overflow-x-hidden">
+    <main className="relative min-h-screen w-full bg-[#f4f7f6] flex flex-col items-center pt-8 font-sans overflow-x-clip">
       {/* Main Hero Content */}
       <div id="home" className="relative flex-1 w-full max-w-[1300px] px-6 lg:px-16 mx-auto flex flex-col items-center mt-24 md:mt-24 z-10">
         
         {/* Large Text */}
         <div className="animate-fade-in-up opacity-0 [animation-delay:200ms] text-center z-20 flex flex-col items-center gap-2 mb-2 md:mb-0 relative md:-bottom-12">
           <h2 className="text-5xl md:text-[5rem] font-outfit font-medium tracking-tight text-slate-900 leading-none">
-            Hi I&apos;m Radhiyya
+            {t('heroGreeting')}
           </h2>
           <h3 className="text-5xl md:text-[5.5rem] font-playfair italic font-medium text-slate-900 leading-none">
             Web & Cloud Engineer
@@ -168,14 +172,14 @@ export default function Home() {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-[#c8ff72]"></span>
             </div>
             <span className="text-sm font-medium text-slate-800">
-              Open for freelance & full-time work
+              {t('heroStatus')}
             </span>
           </div>
 
           {/* 2. Text paragraph (Right Middle) */}
           <div className="hidden md:block absolute right-[-40px] top-[35%] max-w-[220px] animate-fade-in-up opacity-0 [animation-delay:700ms] z-30">
             <p className="text-sm font-medium text-slate-800 leading-relaxed">
-              I design intuitive digital products that solve real problems and deliver meaningful user experiences.
+              {t('heroSubtext')}
             </p>
           </div>
           
@@ -187,7 +191,7 @@ export default function Home() {
               <img src="https://ui-avatars.com/api/?name=C&background=random" alt="Client" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
             </div>
             <p className="text-xs font-medium text-slate-600 leading-snug max-w-[120px]">
-              Trusted by <span className="font-bold text-black">100+ happy clients</span> across industries.
+              {t('heroTrust')}
             </p>
           </div>
 
@@ -195,7 +199,7 @@ export default function Home() {
           <div className="hidden md:block absolute right-[20px] bottom-[20%] z-30 animate-fade-in-up opacity-0 [animation-delay:900ms]">
             <a href="#projects" className="group flex items-center gap-3 bg-[#0f0f0f] text-white px-6 py-4 rounded-[2rem] text-sm font-medium hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 shadow-2xl">
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform text-white/70 group-hover:text-white" />
-              View Project
+              {t('heroViewProjects')}
             </a>
           </div>
           
@@ -210,12 +214,12 @@ export default function Home() {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-[#c8ff72]"></span>
             </div>
             <span className="text-sm font-medium text-slate-800">
-              Open for freelance & full-time work
+              {t('heroStatus')}
             </span>
           </div>
 
           <p className="text-sm font-medium text-slate-800 leading-relaxed text-center max-w-[280px]">
-            I design intuitive digital products that solve real problems and deliver meaningful user experiences.
+            {t('heroSubtext')}
           </p>
 
           <div className="flex flex-col items-center gap-3 mt-2">
@@ -225,13 +229,13 @@ export default function Home() {
               <img src="https://ui-avatars.com/api/?name=C&background=random" alt="Client" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
             </div>
             <p className="text-xs font-medium text-slate-600 leading-tight text-center max-w-[200px]">
-              Trusted by <span className="font-bold text-black">100+ happy clients</span> across industries.
+              {t('heroTrust')}
             </p>
           </div>
 
           <a href="#projects" className="mt-4 flex items-center justify-center gap-2 bg-[#0f0f0f] text-white px-6 py-4 rounded-[2rem] text-sm font-medium hover:bg-slate-800 transition-all active:scale-95 shadow-2xl w-full max-w-[280px]">
             <ArrowRight size={18} className="text-white/70" />
-            View Project
+            {t('heroViewProjects')}
           </a>
       </div>
 
@@ -249,19 +253,19 @@ export default function Home() {
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[100ms]">
               <div className="bg-white/80 backdrop-blur-md rounded-full px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center gap-3 transform -rotate-3 transition-transform hover:rotate-0 hover:scale-105 duration-300">
                  <div className="bg-orange-500 rounded-full w-8 h-8 flex items-center justify-center text-white"><Zap size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-sm text-slate-800">Frontend Dev</span>
+                 <span className="font-semibold text-sm text-slate-800">{t('pillFrontend')}</span>
               </div>
             </div>
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[300ms]">
               <div className="bg-white/80 backdrop-blur-md rounded-full px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center gap-3 transform rotate-2 -ml-8 transition-transform hover:rotate-0 hover:scale-105 duration-300">
                  <div className="bg-blue-400 rounded-full w-8 h-8 flex items-center justify-center text-white"><Zap size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-sm text-slate-800">Backend Dev</span>
+                 <span className="font-semibold text-sm text-slate-800">{t('pillBackend')}</span>
               </div>
             </div>
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[500ms]">
               <div className="bg-white/80 backdrop-blur-md rounded-full px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center gap-3 transform -rotate-2 transition-transform hover:rotate-0 hover:scale-105 duration-300">
                  <div className="bg-black rounded-full w-8 h-8 flex items-center justify-center text-white"><Zap size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-sm text-slate-800">Cloud Architecture</span>
+                 <span className="font-semibold text-sm text-slate-800">{t('pillCloud')}</span>
               </div>
             </div>
           </div>
@@ -271,19 +275,19 @@ export default function Home() {
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
               <div className="bg-white/80 backdrop-blur-md rounded-full px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center gap-3 transform rotate-3 transition-transform hover:rotate-0 hover:scale-105 duration-300">
                  <div className="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center text-white"><Sparkles size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-sm text-slate-800">CI/CD Pipelines</span>
+                 <span className="font-semibold text-sm text-slate-800">{t('pillCicd')}</span>
               </div>
             </div>
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms]">
               <div className="bg-white/80 backdrop-blur-md rounded-full px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center gap-3 transform -rotate-2 -mr-8 transition-transform hover:rotate-0 hover:scale-105 duration-300">
                  <div className="bg-pink-500 rounded-full w-8 h-8 flex items-center justify-center text-white"><Sparkles size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-sm text-slate-800">Database Design</span>
+                 <span className="font-semibold text-sm text-slate-800">{t('pillDb')}</span>
               </div>
             </div>
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[600ms]">
               <div className="bg-white/80 backdrop-blur-md rounded-full px-5 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex items-center gap-3 transform rotate-2 transition-transform hover:rotate-0 hover:scale-105 duration-300">
                  <div className="bg-green-400 rounded-full w-8 h-8 flex items-center justify-center text-white"><Plus size={16} strokeWidth={3}/></div>
-                 <span className="font-semibold text-sm text-slate-800">API Development</span>
+                 <span className="font-semibold text-sm text-slate-800">{t('pillApi')}</span>
               </div>
             </div>
           </div>
@@ -296,13 +300,13 @@ export default function Home() {
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
               <div className="bg-white/90 backdrop-blur-md rounded-full px-4 py-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex items-center gap-2 transform -rotate-6 transition-transform hover:rotate-0">
                  <div className="bg-orange-500 rounded-full w-7 h-7 flex items-center justify-center text-white"><Zap size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-xs text-slate-800">Frontend Dev</span>
+                 <span className="font-semibold text-xs text-slate-800">{t('pillFrontend')}</span>
               </div>
             </div>
             <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] relative top-8">
               <div className="bg-white/90 backdrop-blur-md rounded-full px-4 py-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex items-center gap-2 transform rotate-6 transition-transform hover:rotate-0">
                  <div className="bg-yellow-400 rounded-full w-7 h-7 flex items-center justify-center text-white"><Sparkles size={14} fill="currentColor"/></div>
-                 <span className="font-semibold text-xs text-slate-800">CI/CD Pipelines</span>
+                 <span className="font-semibold text-xs text-slate-800">{t('pillCicd')}</span>
               </div>
             </div>
           </div>
@@ -348,10 +352,10 @@ export default function Home() {
         <div className="absolute top-[60%] left-[66%] -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[450px] h-[300px] md:h-[450px] bg-sky-300/20 rounded-full blur-[100px] pointer-events-none z-0" />
 
         <h3 className="text-2xl md:text-3xl font-playfair italic font-medium text-slate-800 mb-2 relative z-10">
-          My Process
+          {t('myPrincipals')}
         </h3>
         <h2 className="text-4xl md:text-[3.5rem] font-outfit font-medium tracking-tight text-slate-900 mb-16 md:mb-24 relative z-10">
-          Here&apos;s how I work
+          {t('myPrincipals')}
         </h2>
         
         <div className="relative flex flex-col md:flex-row items-center justify-center gap-8 md:gap-10 w-full z-10">
@@ -375,9 +379,9 @@ export default function Home() {
 
             <span className="text-[3.5rem] font-outfit font-medium text-slate-800 mb-auto leading-none">01</span>
             <div>
-              <h4 className="text-3xl font-outfit font-medium text-slate-900 mb-4">Architect</h4>
+              <h4 className="text-3xl font-outfit font-medium text-slate-900 mb-4">{t('processDesignTitle')}</h4>
               <p className="text-[15px] text-slate-600 leading-relaxed">
-                Designing scalable web architectures, database schemas, and robust cloud infrastructures tailored to business needs.
+                {t('processDesignDesc')}
               </p>
             </div>
           </div>
@@ -401,9 +405,9 @@ export default function Home() {
 
             <span className="text-[3.5rem] font-outfit font-medium text-slate-800 mb-auto leading-none">02</span>
             <div>
-              <h4 className="text-3xl font-outfit font-medium text-slate-900 mb-4">Develop</h4>
+              <h4 className="text-3xl font-outfit font-medium text-slate-900 mb-4">{t('processBuildTitle')}</h4>
               <p className="text-[15px] text-slate-600 leading-relaxed">
-                Writing clean, maintainable code for frontend and backend systems, integrating APIs, and setting up CI/CD pipelines.
+                {t('processBuildDesc')}
               </p>
             </div>
           </div>
@@ -412,9 +416,9 @@ export default function Home() {
           <div className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[600ms] relative bg-[#f6f7f9] border border-white rounded-[2rem] p-10 w-full max-w-[380px] h-[360px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] transform md:-rotate-[2deg] hover:!rotate-0 hover:!scale-105 z-10 flex flex-col">
             <span className="text-[3.5rem] font-outfit font-medium text-slate-800 mb-auto leading-none">03</span>
             <div>
-              <h4 className="text-3xl font-outfit font-medium text-slate-900 mb-4">Deploy</h4>
+              <h4 className="text-3xl font-outfit font-medium text-slate-900 mb-4">{t('processDeployTitle')}</h4>
               <p className="text-[15px] text-slate-600 leading-relaxed">
-                Deploying to modern cloud platforms, monitoring performance, optimizing resources, and ensuring high availability.
+                {t('processDeployDesc')}
               </p>
             </div>
           </div>
@@ -425,10 +429,10 @@ export default function Home() {
       {/* Selected Works Section */}
       <section id="projects" className="relative w-full max-w-[1300px] px-6 lg:px-16 mx-auto pt-12 pb-32 flex flex-col items-center justify-center z-20">
         <h3 className="text-2xl md:text-3xl font-playfair italic font-medium text-slate-800 mb-2 reveal-animate opacity-0 translate-y-12 transition-all duration-1000">
-          Selected Works
+          {t('selectedWorks')}
         </h3>
         <h2 className="text-4xl md:text-[3.5rem] font-outfit font-medium tracking-tight text-slate-900 mb-8 reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
-          My Recent Project
+          {t('recentProjects')}
         </h2>
 
         {/* Category Tabs */}
@@ -437,13 +441,13 @@ export default function Home() {
             onClick={() => setActiveTab("website")}
             className={`px-8 py-3 rounded-full font-outfit font-medium transition-all duration-300 ${activeTab === "website" ? "bg-slate-900 text-white shadow-[0_8px_30px_rgb(0,0,0,0.15)]" : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"}`}
           >
-            Website
+            {t('filterWeb')}
           </button>
           <button 
             onClick={() => setActiveTab("cloud")}
             className={`px-8 py-3 rounded-full font-outfit font-medium transition-all duration-300 ${activeTab === "cloud" ? "bg-slate-900 text-white shadow-[0_8px_30px_rgb(0,0,0,0.15)]" : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"}`}
           >
-            Cloud
+            {t('filterCloud')}
           </button>
         </div>
         
@@ -469,7 +473,7 @@ export default function Home() {
                   href="/projects?category=website"
                   className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                 >
-                  Show All
+                  {t('showAll')}
                   <ArrowRight size={18} />
                 </a>
               </div>
@@ -491,14 +495,14 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Show All Cloud Button */}
+            {/* View All Button */}
             {cloudProjects.length > 6 && (
               <div className="mt-16 flex justify-center w-full">
                 <a
                   href="/projects?category=cloud"
                   className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 flex items-center gap-2"
                 >
-                  Show All
+                  {t('showAll')}
                   <ArrowRight size={18} />
                 </a>
               </div>
@@ -512,10 +516,10 @@ export default function Home() {
       {/* Certificates Section */}
       <section id="certificates" className="relative w-full max-w-[1300px] px-6 lg:px-16 mx-auto pt-12 pb-32 flex flex-col items-center justify-center z-20">
         <h3 className="text-2xl md:text-3xl font-playfair italic font-medium text-slate-800 mb-2 reveal-animate opacity-0 translate-y-12 transition-all duration-1000">
-          Achievements
+          {t('achievements')}
         </h3>
         <h2 className="text-4xl md:text-[3.5rem] font-outfit font-medium tracking-tight text-slate-900 mb-16 reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
-          My Certificates
+          {t('myCertificates')}
         </h2>
 
         {isLoading ? (
@@ -569,7 +573,7 @@ export default function Home() {
                   onClick={() => setShowAllCertificates(true)}
                   className="reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[400ms] px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
                 >
-                  Show All
+                  {t('showAllCertificates')}
                   <ArrowRight size={18} />
                 </button>
               </div>
@@ -580,10 +584,10 @@ export default function Home() {
 
       <section id="about" className="relative w-full max-w-[1300px] px-6 lg:px-16 mx-auto pt-12 pb-32 flex flex-col items-center justify-center z-20">
         <h3 className="text-2xl md:text-3xl font-playfair italic font-medium text-slate-800 mb-2 reveal-animate opacity-0 translate-y-12 transition-all duration-1000">
-          Who am i
+          {t('whoAmI')}
         </h3>
         <h2 className="text-4xl md:text-[3.5rem] font-outfit font-medium tracking-tight text-slate-900 mb-16 md:mb-24 reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms]">
-          Getting to Know me
+          {t('gettingToKnowMe')}
         </h2>
 
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-16 lg:gap-24 w-full max-w-[1000px] mx-auto">
@@ -600,21 +604,21 @@ export default function Home() {
             {/* Name & Socials */}
             <div className="flex flex-row items-center justify-between mt-8 px-2">
               <div className="flex gap-4 text-slate-800">
-                <a href="#" className="hover:text-blue-600 transition-colors">
+                <a href="https://www.linkedin.com/in/radhiyya-alea-akbar" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
                     <rect width="4" height="12" x="2" y="9" />
                     <circle cx="4" cy="4" r="2" />
                   </svg>
                 </a>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <a href="https://instagram.com/radhyy._akbar" target="_blank" rel="noopener noreferrer" className="hover:text-pink-600 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                   </svg>
                 </a>
-                <a href="#" className="hover:text-green-600 transition-colors"><Mail size={20} /></a>
+                <a href="mailto:raaakb87@gmail.com" className="hover:text-green-600 transition-colors"><Mail size={20} /></a>
               </div>
               <div className="text-right">
                 <h4 className="font-outfit font-bold text-slate-900 text-[17px]">Radhiyya Alea</h4>
@@ -626,10 +630,10 @@ export default function Home() {
           {/* Right: Description */}
           <div className="w-full lg:w-[55%] reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[500ms] pt-4 flex flex-col justify-center">
             <p className="text-[18px] md:text-[20px] text-slate-800 leading-relaxed font-outfit mb-6 font-medium">
-              I&apos;m a Web & Cloud Engineer passionate about learning, exploring ideas, and building digital experiences that solve real problems.
+              {t('aboutBioMain')}
             </p>
             <p className="text-[16px] md:text-[17px] text-slate-600 leading-relaxed font-outfit">
-              With a strong foundation in modern web technologies and cloud infrastructure, I strive to create scalable, efficient, and beautifully designed applications. My goal is to bridge the gap between design and engineering, ensuring that every project I touch is not only functional but also delivers an exceptional user experience.
+              {t('aboutBioSub')}
             </p>
           </div>
         </div>
@@ -638,13 +642,16 @@ export default function Home() {
       {/* Work Experience Section */}
       <section id="experience" className="relative w-full max-w-[1000px] mx-auto pt-16 pb-8 px-6 flex flex-col z-20">
         <h3 className="text-3xl md:text-4xl font-outfit font-bold text-slate-900 mb-8 tracking-tight reveal-animate opacity-0 translate-y-8 transition-all duration-1000">
-          Work experience
+          {t('experienceTitle')}
         </h3>
 
         <div className="flex flex-col gap-5 reveal-animate opacity-0 translate-y-8 transition-all duration-1000 delay-[200ms]">
           
           {/* Experience Item 1: Elevra Digitalera */}
-          <div className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden">
+          <div 
+            onClick={() => setExpandedItem(expandedItem === 'elevra' ? null : 'elevra')}
+            className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden"
+          >
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-7">
                 {/* Logo Box */}
@@ -670,20 +677,20 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="text-slate-400 group-hover:text-slate-800 transition-transform duration-300 group-hover:rotate-180 hidden sm:block">
+              <div className={`text-slate-400 group-hover:text-slate-800 transition-transform duration-300 ${expandedItem === 'elevra' ? 'rotate-180 text-slate-800' : 'group-hover:rotate-180'}`}>
                 <ChevronDown size={20} />
               </div>
             </div>
 
-            {/* Hover Content */}
-            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+            {/* Hover / Click Content */}
+            <div className={`grid transition-all duration-500 ease-in-out ${expandedItem === 'elevra' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr] group-hover:grid-rows-[1fr]'}`}>
               <div className="overflow-hidden">
                 <div className="pt-6 mt-6 border-t border-slate-100">
-                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">Contributions :</h6>
-                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed">
-                    <li>Developing complete web application solutions spanning both frontend and backend architectures.</li>
-                    <li>Collaborating closely with clients to translate business requirements into high-quality, scalable code.</li>
-                    <li>Ensuring stability through rigorous testing, bug fixes, performance optimizations, and responsive design implementations.</li>
+                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">{t('contributionsLabel')}</h6>
+                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed font-outfit">
+                    <li>{t('elevraContrib1')}</li>
+                    <li>{t('elevraContrib2')}</li>
+                    <li>{t('elevraContrib3')}</li>
                   </ul>
                 </div>
               </div>
@@ -691,7 +698,10 @@ export default function Home() {
           </div>
 
           {/* Experience Item 2: PT Data Inti Prima */}
-          <div className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden">
+          <div 
+            onClick={() => setExpandedItem(expandedItem === 'datainti' ? null : 'datainti')}
+            className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden"
+          >
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-7">
                 {/* Logo Box */}
@@ -717,20 +727,20 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="text-slate-400 group-hover:text-slate-800 transition-transform duration-300 group-hover:rotate-180 hidden sm:block">
+              <div className={`text-slate-400 group-hover:text-slate-800 transition-transform duration-300 ${expandedItem === 'datainti' ? 'rotate-180 text-slate-800' : 'group-hover:rotate-180'}`}>
                 <ChevronDown size={20} />
               </div>
             </div>
 
-            {/* Hover Content */}
-            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+            {/* Hover / Click Content */}
+            <div className={`grid transition-all duration-500 ease-in-out ${expandedItem === 'datainti' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr] group-hover:grid-rows-[1fr]'}`}>
               <div className="overflow-hidden">
                 <div className="pt-6 mt-6 border-t border-slate-100">
-                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">Contributions :</h6>
-                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed">
-                    <li>Developed a robust Facility Helpdesk website from scratch as part of a school internship project.</li>
-                    <li>Built the backend infrastructure using Node.js and Next.js, integrating with a PostgreSQL database.</li>
-                    <li>Leveraged the Restforge framework to accelerate API development and streamline data management.</li>
+                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">{t('contributionsLabel')}</h6>
+                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed font-outfit">
+                    <li>{t('dataIntiContrib1')}</li>
+                    <li>{t('dataIntiContrib2')}</li>
+                    <li>{t('dataIntiContrib3')}</li>
                   </ul>
                 </div>
               </div>
@@ -743,13 +753,16 @@ export default function Home() {
       {/* Education Section */}
       <section id="education" className="relative w-full max-w-[1000px] mx-auto pt-8 pb-24 px-6 flex flex-col z-20">
         <h3 className="text-3xl md:text-4xl font-outfit font-bold text-slate-900 mb-8 tracking-tight reveal-animate opacity-0 translate-y-8 transition-all duration-1000 delay-[100ms]">
-          Education
+          {t('educationTitle')}
         </h3>
 
         <div className="flex flex-col gap-5 reveal-animate opacity-0 translate-y-8 transition-all duration-1000 delay-[300ms]">
           
           {/* Education Item */}
-          <div className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden">
+          <div 
+            onClick={() => setExpandedItem(expandedItem === 'smktelkom' ? null : 'smktelkom')}
+            className="group bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-slate-300 transition-all duration-500 flex flex-col cursor-pointer overflow-hidden"
+          >
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-7">
                 {/* Logo Box */}
@@ -774,20 +787,20 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="text-slate-400 group-hover:text-slate-800 transition-transform duration-300 group-hover:rotate-180 hidden sm:block">
+              <div className={`text-slate-400 group-hover:text-slate-800 transition-transform duration-300 ${expandedItem === 'smktelkom' ? 'rotate-180 text-slate-800' : 'group-hover:rotate-180'}`}>
                 <ChevronDown size={20} />
               </div>
             </div>
 
-            {/* Hover Content */}
-            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out">
+            {/* Hover / Click Content */}
+            <div className={`grid transition-all duration-500 ease-in-out ${expandedItem === 'smktelkom' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr] group-hover:grid-rows-[1fr]'}`}>
               <div className="overflow-hidden">
                 <div className="pt-6 mt-6 border-t border-slate-100">
-                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">Key Focus :</h6>
-                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed">
-                    <li>Cloud computing fundamentals and modern web development techniques.</li>
-                    <li>Network infrastructure design, maintenance, and security protocols.</li>
-                    <li>Application integration, database management, and industry-standard best practices for software engineering.</li>
+                  <h6 className="text-[12px] font-bold text-slate-800 tracking-wider mb-3 uppercase">{t('keyFocusLabel')}</h6>
+                  <ul className="list-disc pl-5 space-y-2 text-[14px] text-slate-600 leading-relaxed font-outfit">
+                    <li>{t('smkTelkomFocus1')}</li>
+                    <li>{t('smkTelkomFocus2')}</li>
+                    <li>{t('smkTelkomFocus3')}</li>
                   </ul>
                 </div>
               </div>
@@ -804,10 +817,10 @@ export default function Home() {
           {/* Left: Text Promotion */}
           <div className="w-full lg:w-[50%] reveal-animate opacity-0 translate-y-12 transition-all duration-1000 delay-[200ms] flex flex-col items-start text-left">
             <h2 className="text-4xl md:text-5xl font-outfit font-medium tracking-tight text-slate-900 mb-6 leading-tight">
-              Bring Your Ideas to Life with <span className="font-playfair italic">Elevra Digitalera</span>
+              {t('elevraPromoHeading')}
             </h2>
             <p className="text-[17px] md:text-lg text-slate-600 leading-relaxed font-outfit mb-10">
-              Need a professional, modern, and high-performing website? Elevra Digitalera offers premium web development services tailored to your business needs. Elevate your brand&apos;s digital presence today.
+              {t('elevraPromoDesc')}
             </p>
             
             <a 
@@ -816,7 +829,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="group flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-full font-outfit font-medium hover:bg-blue-600 hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] hover:-translate-y-1 transition-all duration-300"
             >
-              Visit Elevra Digitalera
+              {t('elevraPromoBtn')}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -962,6 +975,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Scroll Morph Showcase Section */}
+      <ScrollMorphHero />
 
       {/* Testimonials Section */}
       <StaggerTestimonials />
