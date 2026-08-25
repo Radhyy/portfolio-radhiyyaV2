@@ -82,17 +82,7 @@ function FlipCard({
 
 const TOTAL_IMAGES = 20;
 
-// Test images array cycling through all 6 photos in /motion/
-const MOTION_IMAGES = [
-    "/motion/1.png",
-    "/motion/2.png",
-    "/motion/3.png",
-    "/motion/4.png",
-    "/motion/5.png",
-    "/motion/6.png",
-];
-
-const IMAGES = Array.from({ length: TOTAL_IMAGES }, (_, i) => MOTION_IMAGES[i % MOTION_IMAGES.length]);
+const IMAGES = Array.from({ length: TOTAL_IMAGES }, (_, i) => `/motion/${i + 1}.png`);
 
 const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
