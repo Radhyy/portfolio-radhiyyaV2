@@ -89,7 +89,7 @@ export default function Navbar() {
               : 'bg-white/70 backdrop-blur-md border border-slate-200/50 shadow-xs'}`}
         >
           {/* Logo */}
-          <Link href="/" className="flex items-center group shrink-0 transition-transform hover:scale-105">
+          <Link href="/" className="flex items-center gap-2 group shrink-0 transition-transform hover:scale-105">
             <Image 
               src="/LogoRadhiyya.png" 
               alt="Radhiyya Logo" 
@@ -98,6 +98,9 @@ export default function Navbar() {
               className="object-contain h-9 w-auto" 
               priority
             />
+            <span className="font-outfit font-bold text-slate-900 text-lg tracking-tight hidden sm:block">
+              Portfolio
+            </span>
           </Link>
 
           {/* Desktop Nav */}
@@ -242,8 +245,8 @@ export default function Navbar() {
               </div>
               <div className="flex items-center gap-2">
                 <a 
-                  href="/RadhiyyaAlea_CV.pdf" 
-                  download="RadhiyyaAlea_CV.pdf"
+                  href="/Cv-CreativeRadhiyyaAlea.pdf" 
+                  download="Cv-CreativeRadhiyyaAlea.pdf"
                   className="px-4 py-1.5 bg-slate-900 text-white rounded-full text-xs font-semibold hover:bg-blue-600 transition-colors flex items-center gap-1.5"
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -259,10 +262,10 @@ export default function Navbar() {
             </div>
             
             <div className="p-4 overflow-y-auto flex-1 bg-slate-100 flex justify-center">
-              <img 
-                src="/RadhiyyaAlea_CV.png" 
-                alt="Radhiyya Alea CV" 
-                className="w-full max-w-2xl h-auto rounded-xl shadow-md border border-slate-200 object-contain"
+              <iframe 
+                src="/Cv-CreativeRadhiyyaAlea.pdf" 
+                className="w-full h-[65vh] rounded-xl shadow-md border border-slate-200"
+                title="Radhiyya Alea CV"
               />
             </div>
           </div>

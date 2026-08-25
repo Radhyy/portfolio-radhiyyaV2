@@ -84,30 +84,39 @@ function ProjectsContent() {
   return (
     <main className="min-h-screen bg-[#f4f7f6] pt-24 md:pt-32 flex flex-col relative z-0">
       {/* Header Section (Light Theme) */}
-      <div className="w-full max-w-[1300px] px-6 lg:px-16 mx-auto mb-12 relative z-10">
-        {/* Breadcrumbs */}
-        <div className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 mb-6 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200">
-          <Link href="/" className="flex items-center gap-1.5 hover:text-slate-900 transition-colors">
-            <Home size={16} />
-          </Link>
-          <ChevronRight size={14} className="text-slate-400" />
-          <span className="text-blue-600 font-semibold">{t('navProjects')}</span>
+      <div className="w-full max-w-[1300px] px-6 lg:px-16 mx-auto mb-12 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          {/* Breadcrumbs */}
+          <div className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 mb-6 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200">
+            <Link href="/" className="flex items-center gap-1.5 hover:text-slate-900 transition-colors">
+              <Home size={16} />
+            </Link>
+            <ChevronRight size={14} className="text-slate-400" />
+            <span className="text-blue-600 font-semibold">{t('navProjects')}</span>
+          </div>
+
+          {/* Title & Subtitle */}
+          <h1 className="text-5xl md:text-6xl font-outfit font-bold text-slate-900 mb-4 tracking-tight">
+            {t('allProjectsTitle')}
+          </h1>
+          <p className="text-slate-600 text-lg md:text-xl max-w-2xl font-medium leading-relaxed">
+            {t('allProjectsSubtitle')}
+          </p>
         </div>
 
-        {/* Title & Subtitle */}
-        <h1 className="text-5xl md:text-6xl font-outfit font-bold text-slate-900 mb-4 tracking-tight">
-          {t('allProjectsTitle')}
-        </h1>
-        <p className="text-slate-600 text-lg md:text-xl max-w-2xl font-medium leading-relaxed">
-          {t('allProjectsSubtitle')}
-        </p>
+        {!isLoading && (
+          <div className="flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-full text-sm font-semibold text-slate-700 shadow-sm animate-fade-in-up md:mb-2">
+            <span>Total {activeTab === 'website' ? 'Websites' : 'Cloud Projects'}:</span>
+            <span className="bg-slate-900 text-white px-2.5 py-1 rounded-md shadow-sm text-base">{currentProjects.length}</span>
+          </div>
+        )}
       </div>
 
       {/* Main Content Area */}
       <div className="flex-1 w-full max-w-[1300px] px-6 lg:px-16 mx-auto pb-32 relative z-10 font-outfit">
         {/* Category Tabs & Search */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
-          <div className="flex items-center gap-4 w-full md:w-auto">
+          <div className="flex items-center flex-wrap gap-4 w-full md:w-auto">
             <button 
               onClick={() => setActiveTab("website")}
               className={`px-8 py-3 rounded-full font-outfit font-medium transition-all duration-300 ${activeTab === "website" ? "bg-slate-900 text-white shadow-[0_8px_30px_rgb(0,0,0,0.15)]" : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"}`}
