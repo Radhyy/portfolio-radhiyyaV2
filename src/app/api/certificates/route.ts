@@ -3,7 +3,7 @@ import { Client } from 'pg';
 
 export async function GET() {
   const client = new Client({
-    connectionString: 'postgresql://neondb_owner:npg_zYrR9aju0vNs@ep-twilight-haze-axghs3o4.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require',
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
   });
 
@@ -35,7 +35,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const client = new Client({
-    connectionString: 'postgresql://neondb_owner:npg_zYrR9aju0vNs@ep-twilight-haze-axghs3o4.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require',
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
   });
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Client } from 'pg';
 
-const DATABASE_URL = 'postgresql://neondb_owner:npg_zYrR9aju0vNs@ep-twilight-haze-axghs3o4.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require';
+const DATABASE_URL = process.env.DATABASE_URL || '';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
